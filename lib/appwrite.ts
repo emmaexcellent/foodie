@@ -12,7 +12,7 @@ export async function fetchRecipeList() {
   try {
     const result = await databases.listDocuments(
       `${process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID!}`, // databaseId
-      `${process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_ID!}`, // collectionId
+      "6766736f001156947700", // collectionId
       [] // queries (optional)
     );
     return result.documents;
@@ -26,7 +26,7 @@ export async function fetchRecipeById(documentId: string) {
   try {
     const result = await databases.getDocument(
       `${process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID!}`, // databaseId
-      `${process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_ID!}`, // collectionId
+      "6766736f001156947700", // collectionId
       documentId // documentId
     );
     return result;
