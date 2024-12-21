@@ -3,17 +3,22 @@ import RecipeInteractiveSection from "@/components/RecipeInteractiveSection";
 import ListSingle from "@/components/shared/ListSingle";
 import MayLikeRecipes from "@/components/shared/MayLikeRecipes";
 import User from "@/components/shared/user";
-import { fetchRecipeById } from "@/lib/appwrite";
+import { fetchRecipeById, fetchRecipeList } from "@/lib/appwrite";
 import { unslugify } from "@/lib/utils";
 import Image from "next/image";
 import React from "react";
 
-const RecipeDetailPage = async ({ params }: { params: { slug: string } }) => {
-  const { id } = unslugify((await params).slug);
+const RecipeDetailPage = async ({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) => {
+  const slug = (await params).slug;
+  const { id } = unslugify(slug);
 
   const recipe = await fetchRecipeById(id);
 
-  console.log(recipe)
+  const recipes = await fetchRecipeList();
 
   return (
     <main>
@@ -101,7 +106,7 @@ const RecipeDetailPage = async ({ params }: { params: { slug: string } }) => {
                 </ul>
               </div>
             </div>
-            <RecipeDescription description={recipe.description}/>
+            <RecipeDescription description={recipe.description} />
           </div>
 
           {/* Ingredients & Side Recipes */}
@@ -118,9 +123,14 @@ const RecipeDetailPage = async ({ params }: { params: { slug: string } }) => {
             <div className="w-full lg:w-1/3">
               <h5 className="font-semibold text-lg">Related Recipes</h5>
               <div className="mt-6 space-y-4">
-                <ListSingle />
-                <ListSingle />
-                <ListSingle />
+                {recipes.slice(4, 8).map((recipe) => (
+                  <ListSingle
+                    key={recipe.$id}
+                    title={recipe.name}
+                    imgUrl={recipe.thumbnail}
+                    description={recipe.cook_time}
+                  />
+                ))}
               </div>
             </div>
           </div>
